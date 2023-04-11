@@ -38,25 +38,32 @@ let users = [
 
 app.get("/users", (req, res) => {
   res.json(users);
+  return res.status(200);
 });
 
 //agregara un elemento nuevo al arreglo
 app.post("/user", (req, res) => {
-  const lastObj = Object.assign({}, users.slice(-1).pop());
-  const lastId = parseInt(lastObj.id);
-  const newIDUser = lastId + 1;
-  const newItem = {
-    id: newIDUser,
-    ...req.body,
-  };
-  /* console.log(newItem); */
-  if (users.length < 20) {
-    users.push(newItem);
-    /* console.log("Objeto agregado al arreglo"); */
-    res.status(201).json(newItem);
+  //validacion si se envian datos del body
+  let validationBody = Object.values(req.body).length > 0;
+  if (!validationBody) {
+    res.status(500).send("Faltan parametros en el body");
   } else {
-    /* console.log("Maxima capacidad del arreglo"); */
-    res.status(429).send("Maxima capacidad disco lleno").json(newItem);
+    const lastObj = Object.assign({}, users.slice(-1).pop());
+    const lastId = parseInt(lastObj.id);
+    const newIDUser = lastId + 1;
+    const newItem = {
+      id: newIDUser,
+      ...req.body,
+    };
+    /* console.log(newItem); */
+    if (users.length < 20) {
+      users.push(newItem);
+      /* console.log("Objeto agregado al arreglo"); */
+      res.status(201).json(newItem);
+    } else {
+      /* console.log("Maxima capacidad del arreglo"); */
+      res.status(429).send("Maxima capacidad disco lleno").json(newItem);
+    }
   }
 });
 // Definir una ruta para modificar las propiedades del arreglo
@@ -78,27 +85,35 @@ app.post("/modify-user", (req, res) => {
     res.status(500).send("El usuario no fue encontrado");
   }
 });
+
 app.get("/user", (req, res) => {
-  // Obtener los datos enviados por el frontend
-  const { id, name } = req.body;
-
-  // Buscar el usuario por su id
-  const user = users.find((u) => u.id === id);
-
-  // Si se encontró el usuario, modificar su nombre
-  if (user) {
-    user.name = name;
-    res.send("El usuario ha sido modificado correctamente");
+  console.log(req.body);
+  //validacion si se envian datos del body
+  let validationBody = Object.values(req.body).length > 0;
+  if (!validationBody) {
+    res.send("metodo get no aceptado");
   } else {
-    res.send("El usuario no fue encontrado");
+    // Obtener los datos enviados por el frontend
+    const { id, name } = req.body;
+
+    // Buscar el usuario por su id
+    let user = users.find((u) => u.id === id);
+
+    // Si se encontró el usuario, modificar su nombre
+    if (user) {
+      user.name = name;
+      res.send("El usuario ha sido modificado correctamente");
+    } else {
+      res.send("El usuario no fue encontrado");
+    }
   }
 });
 
 app.delete("/user/:id", (req, res) => {
   const id = parseInt(req.params.id);
-  console.log(id);
-  user = users.findIndex((item) => item.id == id);
-  console.log(user);
+  /* console.log(id); */
+  let user = users.findIndex((item) => item.id == id);
+  /* console.log(user); */
 
   if (user >= 0) {
     users.splice(user, 1);
@@ -114,3 +129,5 @@ app.listen(port, () => {
   console.log(`http://localhost:${port}`);
   console.log("###########################");
 });
+
+module.exports = app;
