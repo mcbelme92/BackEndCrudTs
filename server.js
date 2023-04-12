@@ -4,9 +4,16 @@ const bodyParser = require("body-parser");
 // Crear una instancia de Express
 const app = express();
 const port = 3000;
+//acceso a ip front end
+const corsOptions = {
+  origin: "*",
+};
+//Acceso desde el front end test
+const cors = require("cors");
 //Esto hace que nuestro servidor pueda recibir datos en JSON
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(cors(corsOptions));
 
 // Definir un arreglo de objetos como backend
 let users = [
@@ -48,6 +55,7 @@ app.post("/user", (req, res) => {
   if (!validationBody) {
     res.status(500).send("Faltan parametros en el body");
   } else {
+    //crear una copia del último objeto en un array de objetos
     const lastObj = Object.assign({}, users.slice(-1).pop());
     const lastId = parseInt(lastObj.id);
     const newIDUser = lastId + 1;
@@ -87,7 +95,6 @@ app.post("/modify-user", (req, res) => {
 });
 
 app.get("/user", (req, res) => {
-  console.log(req.body);
   //validacion si se envian datos del body
   let validationBody = Object.values(req.body).length > 0;
   if (!validationBody) {
