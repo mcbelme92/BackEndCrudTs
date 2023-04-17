@@ -1,6 +1,8 @@
 // Requerir los módulos necesarios
 const express = require("express");
 const bodyParser = require("body-parser");
+//Acceso desde el front end test
+const cors = require("cors");
 // Crear una instancia de Express
 const app = express();
 const port = 3000;
@@ -8,8 +10,6 @@ const port = 3000;
 const corsOptions = {
   origin: "*",
 };
-//Acceso desde el front end test
-const cors = require("cors");
 //Esto hace que nuestro servidor pueda recibir datos en JSON
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
