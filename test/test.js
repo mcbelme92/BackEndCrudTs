@@ -1,5 +1,5 @@
 const request = require("supertest");
-const app = require("./server");
+const app = require("../index");
 
 describe("Test a agregar usuario,borrar,modificar,obtener usuarios", () => {
   test("Test obtener todos los usuarios", async () => {

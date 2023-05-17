@@ -39,8 +39,8 @@ const checkUserFound = (req, res, next) => {
     res
       .status(200)
       .send(`El usuario:${jsonUser} ha sido modificado correctamente`);
+    next();
   }
-  next();
 };
 
 const checkGetUserFound = (req, res, next) => {
