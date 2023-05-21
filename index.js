@@ -4,9 +4,10 @@ const bodyParser = require("body-parser");
 const app = express();
 const port = 3000;
 const cors = require("cors");
+const BASE_PATH = require("./config/constants");
 //acceso a ip front end
 const corsOptions = {
-  origin: "*",
+  origin: BASE_PATH,
 };
 
 const users = require("./config/data.js");
@@ -16,6 +17,7 @@ const {
   newUser,
   getUserId,
   deleteUserPerId,
+  generateToken,
 } = require("./controller/userController.js");
 const {
   validateRequestBody,
@@ -38,9 +40,12 @@ app.post("/modify-user", checkUserFound, modifyUser);
 app.post("/user", validateRequestBody, checkUserCapacity, newUser);
 //Obtienepor id informacion del usuario
 app.get("/user/:id", checkGetUserFound, getUserId);
+app.get("/token", generateToken);
+
 //Borra por id el usuario
 app.delete("/user/:id", DeleteUserMiddleware, deleteUserPerId);
-
+//
+app.delete("/user/:id", DeleteUserMiddleware, deleteUserPerId);
 // Escuchar el puerto 3000
 app.listen(port, () => {
   console.log("###########################");

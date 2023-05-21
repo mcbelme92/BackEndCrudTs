@@ -5,7 +5,7 @@ const users = require("../config/data.js");
 // Middleware para validar si se envían datos en el body
 const validateRequestBody = (req, res, next) => {
   if (Object.keys(req.body).length === 0) {
-    return res.status(500).send("Faltan parámetros en el body");
+    return res.status(400).send("Faltan parámetros en el body");
   }
   //siguiente paso del endpoint que seria ir al repsonse
   next();
@@ -39,8 +39,8 @@ const checkUserFound = (req, res, next) => {
     res
       .status(200)
       .send(`El usuario:${jsonUser} ha sido modificado correctamente`);
-    next();
   }
+  next();
 };
 
 const checkGetUserFound = (req, res, next) => {
@@ -53,6 +53,7 @@ const checkGetUserFound = (req, res, next) => {
     //sino muestrame la respuesta correcta
     res.status(200).json(user[0]);
   }
+  next();
 };
 
 const DeleteUserMiddleware = (req, res, next) => {
@@ -67,6 +68,7 @@ const DeleteUserMiddleware = (req, res, next) => {
   } else {
     return res.status(500).json({ message: `Usuario ${id} no existe.` });
   }
+  next();
 };
 
 module.exports = {

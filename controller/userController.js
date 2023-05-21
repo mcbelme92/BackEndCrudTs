@@ -1,4 +1,5 @@
 let users = require("../config/data.js");
+const jwt = require("jsonwebtoken");
 
 // Obtener todos los usuarios
 const getUsers = (req, res) => {
@@ -22,6 +23,17 @@ const newUser = (req, res) => {
 const getUserId = (req, res) => {};
 const deleteUserPerId = (req, res) => {};
 
+const generateToken = (req, res) => {
+  // Obtener la información del usuario
+  const { id, name, email } = req.body;
+
+  // Generar el token
+  const token = jwt.sign({ id, name, email }, "secreto", { expiresIn: "1h" });
+
+  // Enviar el token en la respuesta
+  res.json({ token });
+};
+
 module.exports = {
   getUsers,
   modifyUser,
@@ -29,4 +41,5 @@ module.exports = {
   newUser,
   getUserId,
   deleteUserPerId,
+  generateToken,
 };
